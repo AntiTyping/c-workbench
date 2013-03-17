@@ -65,11 +65,11 @@ node_t **graph(long side)
         else
         {
           graph1[node] = malloc(3 * sizeof(node_t));
-          graph1[node]->node = 4;
+          graph1[node]->node = node - side;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 6;
+          graph1[node][1].node = node - 1;
           graph1[node][1].next = &graph1[node][2];
-          graph1[node][2].node = 8;
+          graph1[node][2].node = node + 1;
         }
       }
       else
@@ -122,6 +122,7 @@ void test_graph_with_4_nodes()
   };
 
   int row, i;
+
   for (row = 0; row < 4; row++)
   {
     node_t *p = graph1[row];
