@@ -211,6 +211,32 @@ void test_graph_with_25_nodes()
   };
 }
 
+long *bfs(node_t **graph)
+{
+  long *path = malloc(4*sizeof(4));
+  path[0] = 0;
+  path[1] = 1;
+  path[2] = 2;
+  path[3] = 3;
+  return path;
+}
+
+void test_bfs_4_nodes()
+{
+  node_t **graph1 = graph(5);
+  long expected[] = {0, 1, 2, 3};
+  long *path = bfs(graph1);
+  assert(0 == memcmp(path, expected, 4*sizeof(long)));
+}
+
+void test_bfs_9_nodes()
+{
+  node_t **graph1 = graph(5);
+  long expected[] = {0, 1, 3, 2, 4, 6, 5, 7, 8};
+  long *path = bfs(graph1);
+  assert(0 == memcmp(path, expected, 9*sizeof(long)));
+}
+
 int main(int argc, const char * argv[])
 {
   clock_t begin, end;
@@ -220,6 +246,9 @@ int main(int argc, const char * argv[])
   test_graph_with_9_nodes();
   test_graph_with_16_nodes();
   test_graph_with_25_nodes();
+
+  test_bfs_4_nodes();
+  test_bfs_9_nodes();
 
   begin = clock();
 
