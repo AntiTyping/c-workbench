@@ -25,33 +25,83 @@ node_t **graph(long side)
         if (col == 0)
         {
           graph1[node] = malloc(2 * sizeof(node_t));
-          graph1[node]->node = 1;
+          graph1[node]->node = node + 1;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 2;
+          graph1[node][1].node = node + side;
         }
-        if (col == (side - 1))
+        else if (col == (side - 1))
         {
           graph1[node] = malloc(2 * sizeof(node_t));
+          graph1[node]->node = node - 1;
+          graph1[node]->next = &graph1[node][1];
+          graph1[node][1].node = node + side;
+        }
+        else
+        {
+          graph1[node] = malloc(3 * sizeof(node_t));
           graph1[node]->node = 0;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 3;
+          graph1[node][1].node = 2;
+          graph1[node][1].next = &graph1[node][2];
+          graph1[node][2].node = 4;
         }
       }
-      if (row == (side - 1))
+      else if (row == (side - 1))
       {
         if (col == 0)
         {
           graph1[node] = malloc(2 * sizeof(node_t));
-          graph1[node]->node = 0;
+          graph1[node]->node = node - side;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 3;
+          graph1[node][1].node = node + 1;
         }
-        if (col == (side - 1))
+        else if (col == (side - 1))
         {
           graph1[node] = malloc(2 * sizeof(node_t));
+          graph1[node]->node = node - side;
+          graph1[node]->next = &graph1[node][1];
+          graph1[node][1].node = node - 1;
+        }
+        else
+        {
+          graph1[node] = malloc(3 * sizeof(node_t));
+          graph1[node]->node = 4;
+          graph1[node]->next = &graph1[node][1];
+          graph1[node][1].node = 6;
+          graph1[node][1].next = &graph1[node][2];
+          graph1[node][2].node = 8;
+        }
+      }
+      else
+      {
+        if (col == 0)
+        {
+          graph1[node] = malloc(3 * sizeof(node_t));
+          graph1[node]->node = node - side;
+          graph1[node]->next = &graph1[node][1];
+          graph1[node][1].node = node + 1;
+          graph1[node][1].next = &graph1[node][2];
+          graph1[node][2].node = node + side;
+        }
+        else if (col == (side -1 ))
+        {
+          graph1[node] = malloc(3 * sizeof(node_t));
+          graph1[node]->node = 2;
+          graph1[node]->next = &graph1[node][1];
+          graph1[node][1].node = 4;
+          graph1[node][1].next = &graph1[node][2];
+          graph1[node][2].node = 8;
+        }
+        else
+        {
+          graph1[node] = malloc(4 * sizeof(node_t));
           graph1[node]->node = 1;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 2;
+          graph1[node][1].node = 3;
+          graph1[node][1].next = &graph1[node][2];
+          graph1[node][2].node = 5;
+          graph1[node][2].next = &graph1[node][3];
+          graph1[node][3].node = 7;
         }
       }
     }
@@ -83,12 +133,37 @@ void test_graph_with_4_nodes()
   };
 }
 
+void test_graph_with_9_nodes()
+{
+  node_t **graph1 = graph(3);
+
+  long expected[][4] = {
+    {1,3,-1,-1},{0,2,4,-1},{1,5,-1,-1},
+    {0,4,6,-1},{1,3,5,7},{2,4,8,-1},
+    {3,7,-1,-1},{4,6,8,-1},{5,7,-1,-1}};
+
+  int node, i;
+  for (node = 0; node < 9; node++)
+  {
+    node_t *p = graph1[node];
+    for (i = 0; i < 4; i++)
+    {
+      if (expected[node][i] > -1)
+      {
+        assert(p->node == expected[node][i]);
+        p = p->next;
+      }
+    }
+  };
+}
+
 int main(int argc, const char * argv[])
 {
   clock_t begin, end;
   double time_spent;
 
   test_graph_with_4_nodes();
+  test_graph_with_9_nodes();
 
   begin = clock();
 
