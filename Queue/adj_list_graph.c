@@ -39,11 +39,11 @@ node_t **graph(long side)
         else
         {
           graph1[node] = malloc(3 * sizeof(node_t));
-          graph1[node]->node = 0;
+          graph1[node]->node = node - 1;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 2;
+          graph1[node][1].node = node + 1;
           graph1[node][1].next = &graph1[node][2];
-          graph1[node][2].node = 4;
+          graph1[node][2].node = node + side;
         }
       }
       else if (row == (side - 1))
@@ -86,22 +86,22 @@ node_t **graph(long side)
         else if (col == (side -1 ))
         {
           graph1[node] = malloc(3 * sizeof(node_t));
-          graph1[node]->node = 2;
+          graph1[node]->node = node - side;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 4;
+          graph1[node][1].node = node - 1;
           graph1[node][1].next = &graph1[node][2];
-          graph1[node][2].node = 8;
+          graph1[node][2].node = node + side;
         }
         else
         {
           graph1[node] = malloc(4 * sizeof(node_t));
-          graph1[node]->node = 1;
+          graph1[node]->node = node - side;
           graph1[node]->next = &graph1[node][1];
-          graph1[node][1].node = 3;
+          graph1[node][1].node = node - 1;
           graph1[node][1].next = &graph1[node][2];
-          graph1[node][2].node = 5;
+          graph1[node][2].node = node + 1;
           graph1[node][2].next = &graph1[node][3];
-          graph1[node][3].node = 7;
+          graph1[node][3].node = node + side;
         }
       }
     }
@@ -157,6 +157,32 @@ void test_graph_with_9_nodes()
   };
 }
 
+void test_graph_with_16_nodes()
+{
+  node_t **graph1 = graph(4);
+
+  long expected[][4] = {
+    {1,4,-1,-1},{0,2,5,-1},{1,3,6,-1},{2,7,-1,-1},
+    {0,5,8,-1},{1,4,6,9},{2,5,7,10},{3,6,11,-1},
+    {4,9,12,-1},{5,8,10,13},{6,9,11,14},{7,10,15,-1},
+    {8,13,-1,-1},{9,12,14,-1},{10,13,15,-1},{11,14,-1,-1}
+  };
+
+  int node, i;
+  for (node = 0; node < 9; node++)
+  {
+    node_t *p = graph1[node];
+    for (i = 0; i < 4; i++)
+    {
+      if (expected[node][i] > -1)
+      {
+        assert(p->node == expected[node][i]);
+        p = p->next;
+      }
+    }
+  };
+}
+
 int main(int argc, const char * argv[])
 {
   clock_t begin, end;
@@ -164,6 +190,7 @@ int main(int argc, const char * argv[])
 
   test_graph_with_4_nodes();
   test_graph_with_9_nodes();
+  test_graph_with_16_nodes();
 
   begin = clock();
 
