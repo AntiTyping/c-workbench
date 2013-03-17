@@ -1,0 +1,6 @@
+.DS_Store
+.vimlog
+.idea/
+*.out
+*.dSYM
+Queue.xcodeproj/
