@@ -292,6 +292,14 @@ void test_bfs_9_nodes()
   assert(0 == memcmp(path, expected, 9*sizeof(long)));
 }
 
+void test_bfs_16_nodes()
+{
+  node_t **graph1 = graph(4);
+  long expected[] = { 0,1,4,2,5,8,3,6,9,12,7,10,13,11,14,15};
+  long *path = bfs(16, graph1, 0);
+  assert(0 == memcmp(path, expected, 9*sizeof(long)));
+}
+
 int main(int argc, const char * argv[])
 {
   clock_t begin, end;
@@ -304,6 +312,7 @@ int main(int argc, const char * argv[])
 
   test_bfs_4_nodes();
   test_bfs_9_nodes();
+  test_bfs_16_nodes();
 
   begin = clock();
 
