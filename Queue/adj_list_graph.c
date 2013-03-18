@@ -211,29 +211,84 @@ void test_graph_with_25_nodes()
   };
 }
 
-long *bfs(node_t **graph)
+typedef struct {
+    long start;
+    long end;
+    long queue[100000];
+} queue_t;
+
+int empty(queue_t *queue)
 {
-  long *path = malloc(4*sizeof(4));
-  path[0] = 0;
-  path[1] = 1;
-  path[2] = 2;
-  path[3] = 3;
-  return path;
+    return queue->start - queue->end;
+}
+
+int any(queue_t *queue)
+{
+    return queue->start != queue->end;
+}
+
+long dequeue(queue_t *queue)
+{
+    return queue->queue[queue->start++];
+}
+
+void enqueue(queue_t *queue, long value)
+{
+    queue->queue[queue->end++] = value;
+}
+
+typedef struct {
+  long *list;
+  long tail;
+} list_t;
+
+void list_append(list_t *list, long value)
+{
+  list->list[++list->tail] = value;
+}
+
+long *bfs(long n, node_t **graph, long source)
+{
+  long *path_ = malloc(n*n*sizeof(4));
+  long size = n * n;
+  list_t path = {path_, -1};
+  queue_t queue = {0, 0, {0}};
+  long visited[100000] = {0};
+
+  enqueue(&queue, source);
+  visited[source] = 1;
+  while(any(&queue))
+  {
+    long node = dequeue(&queue);
+    list_append(&path, node);
+    node_t *p = graph[node];
+    while (p)
+    {
+      int i = p->node;
+      if (visited[i] == 0)
+      {
+        enqueue(&queue, i);
+        visited[i] = 1;
+      }
+      p = p->next;
+    }
+  }
+  return path.list;
 }
 
 void test_bfs_4_nodes()
 {
-  node_t **graph1 = graph(5);
+  node_t **graph1 = graph(2);
   long expected[] = {0, 1, 2, 3};
-  long *path = bfs(graph1);
+  long *path = bfs(5, graph1, 0);
   assert(0 == memcmp(path, expected, 4*sizeof(long)));
 }
 
 void test_bfs_9_nodes()
 {
-  node_t **graph1 = graph(5);
+  node_t **graph1 = graph(3);
   long expected[] = {0, 1, 3, 2, 4, 6, 5, 7, 8};
-  long *path = bfs(graph1);
+  long *path = bfs(9, graph1, 0);
   assert(0 == memcmp(path, expected, 9*sizeof(long)));
 }
 
